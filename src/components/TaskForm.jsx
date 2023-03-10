@@ -1,41 +1,13 @@
 import { useState, useContext } from 'react';
 import { TaskContext } from '../context/TaskContext';
+import CreateTaskForm from './CreateTaskForm';
+import EditTaskForm from './EditTaskForm';
 function TaskForm() {
-	const [title, setTitle] = useState('');
-	const [description, setDescription] = useState('');
-	const { createTask } = useContext(TaskContext);
-
-	const handleSubmit = e => {
-		e.preventDefault();
-		createTask({ title, description });
-		setTitle('');
-		setDescription('');
-	};
+	const { isEdit } = useContext(TaskContext);
 
 	return (
 		<div className='max-w-md mx-auto'>
-			<form className='bg-slate-700 p-10 mb-4' onSubmit={handleSubmit}>
-				<h1 className='text-2xl font-bold text-white mb-3'>Crea tu tarea</h1>
-				<input
-					placeholder='Escribe tu tarea'
-					onChange={e => {
-						setTitle(e.target.value);
-					}}
-					value={title}
-					className='bg-slate-500 p-3 w-full mb-2'
-				/>
-				<textarea
-					placeholder='Escriba la descripcion de la tarea'
-					onChange={e => {
-						setDescription(e.target.value);
-					}}
-					value={description}
-					className='bg-slate-200 p-3 w-full mb-2'
-				></textarea>
-				<button className='bg-indigo-500 px-3 py-1 text-white ' type='submit'>
-					Guardar
-				</button>
-			</form>
+			{isEdit ? <EditTaskForm /> : <CreateTaskForm />}
 		</div>
 	);
 }

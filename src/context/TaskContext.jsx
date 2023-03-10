@@ -4,32 +4,48 @@ import { tasks as data } from '../data/tasks';
 export const TaskContext = createContext();
 
 export function TaskContextProvider(props) {
-	const [tasks, setTasks] = useState([]);
+	const [tasks, setTasks] = useState(data);
+	const [isEdit, setIsEdit] = useState(false);
+	const [task, setTask] = useState({
+		titleForm: '',
+		descriptionForm: '',
+		idForm: '',
+	});
+	const [selectedTaskId, setSelectedTaskId] = useState('');
 
 	function createTask(task) {
 		setTasks([
 			...tasks,
 			{
-				title: task.title,
-				id: tasks.length,
-				description: task.description,
+				id: task.idForm,
+				title: task.titleForm,
+				description: task.descriptionForm,
 			},
 		]);
 	}
 	function deleteTask(taskId) {
 		setTasks(tasks.filter(t => t.id !== taskId));
 	}
-
-	useEffect(() => {
-		setTasks(data);
-	}, []);
-
+	function editTask(task) {
+		const temp = [...tasks];
+		const item = temp.find(t => t.id === task.idForm);
+		item.title = task.titleForm;
+		item.description = task.descriptionForm;
+		setTasks(temp);
+	}
 	return (
 		<TaskContext.Provider
 			value={{
 				tasks,
 				deleteTask,
 				createTask,
+				isEdit,
+				setIsEdit,
+				editTask,
+				setTask,
+				task,
+				selectedTaskId,
+				setSelectedTaskId,
 			}}
 		>
 			{props.children}
